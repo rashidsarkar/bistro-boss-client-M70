@@ -1,5 +1,10 @@
+import { loadStripe } from "@stripe/stripe-js";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "./CheckoutForm";
 
+//TODO - we have to add publiccable KEY
+const stripePromise = loadStripe(import.meta.env.VITE_PAYMANT_KEY);
 function Payment() {
   return (
     <div>
@@ -8,7 +13,9 @@ function Payment() {
         subHeading={`please pay to eat`}
       ></SectionTitle>
       <div>
-        <h2 className="text-4xl">taka o phaki tomi aso</h2>
+        <Elements stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
       </div>
     </div>
   );
