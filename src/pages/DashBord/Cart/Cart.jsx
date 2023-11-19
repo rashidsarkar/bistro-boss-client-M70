@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import useCart from "../../../hooks/useCart";
 import { MdDelete } from "react-icons/md";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 function Cart() {
   const { carts, cartsRefetch } = useCart();
@@ -35,10 +36,17 @@ function Cart() {
   };
   return (
     <div>
-      <div className="flex justify-evenly mb-6">
+      <div className="flex mb-6 justify-evenly">
         <h2 className="text-4xl">Items:{carts?.length}</h2>
         <h2 className="text-4xl">Total Price: ${totalPrice}</h2>
-        <button className="btn btn-primary">Pay</button>
+
+        {carts.length ? (
+          <Link to={`/dashBord/payment`}>
+            <button className="btn btn-primary">Pay</button>
+          </Link>
+        ) : (
+          <button className="btn btn-primary btn-disabled">Pay</button>
+        )}
       </div>
       <div className="overflow-x-auto ">
         <table className="table w-full">
@@ -61,7 +69,7 @@ function Cart() {
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
-                      <div className="mask mask-squircle w-12 h-12">
+                      <div className="w-12 h-12 mask mask-squircle">
                         <img
                           src={item?.image}
                           alt="Avatar Tailwind CSS Component"
