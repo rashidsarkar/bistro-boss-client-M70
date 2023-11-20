@@ -40,7 +40,7 @@ function Cart() {
         <h2 className="text-4xl">Items:{carts?.length}</h2>
         <h2 className="text-4xl">Total Price: ${totalPrice}</h2>
 
-        {carts.length ? (
+        {carts?.length ? (
           <Link to={`/dashBord/payment`}>
             <button className="btn btn-primary">Pay</button>
           </Link>

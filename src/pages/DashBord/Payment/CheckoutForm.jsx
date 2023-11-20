@@ -1,10 +1,26 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useCart from "../../../hooks/useCart";
 
 function CheckoutForm() {
   const [error, setError] = useState([]);
   const stripe = useStripe();
   const elements = useElements();
+  const axiosSecure = useAxiosSecure();
+  const { carts } = useCart();
+  const totalPrice = carts.reduce((total, item) => total + item.price, 0);
+  const [clientSecret, setClientSecret] = useState("");
+
+  useEffect(() => {
+    axiosSecure
+      .post(`/create-payment-intent`, { price: totalPrice })
+      .then((res) => {
+        console.log(res.data.clientSecret);
+        setClientSecret(res.data.clientSecret);
+      });
+  }, [axiosSecure, totalPrice]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
@@ -47,7 +63,7 @@ function CheckoutForm() {
       <button
         type="submit"
         className="my-4 btn btn-sm btn-primary"
-        disabled={!stripe}
+        disabled={!stripe || !clientSecret}
       >
         Pay
       </button>
