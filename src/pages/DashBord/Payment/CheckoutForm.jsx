@@ -12,7 +12,7 @@ function CheckoutForm() {
   const elements = useElements();
   const axiosSecure = useAxiosSecure();
   const { carts } = useCart();
-  const totalPrice = carts.reduce((total, item) => total + item.price, 0);
+  const totalPrice = carts?.reduce((total, item) => total + item.price, 0);
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
@@ -62,6 +62,18 @@ function CheckoutForm() {
       if (paymentIntent.status === "succeeded") {
         console.log(`transation id`, paymentIntent.id);
         setTransactionId(paymentIntent.id);
+        //NOTE -  NOW save the info on the database
+        const payment = {
+          email: user.email,
+          price: totalPrice,
+          date: new Date(), //utc date convert . use moments js
+          transactionID: paymentIntent.id,
+          cartIDs: carts.map((item) => item._id),
+          menuItemIds: carts.map((item) => item.menuID),
+          status: "pending",
+        };
+        const res = await axiosSecure.post("/payments", payment);
+        console.log("payment saved", res.data);
       }
     }
   };
