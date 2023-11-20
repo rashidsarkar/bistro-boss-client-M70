@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useCart from "../../../hooks/useCart";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 function CheckoutForm() {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const axiosSecure = useAxiosSecure();
-  const { carts } = useCart();
+  const { carts, cartsRefetch } = useCart();
   const totalPrice = carts?.reduce((total, item) => total + item.price, 0);
   const [clientSecret, setClientSecret] = useState("");
 
@@ -76,6 +77,16 @@ function CheckoutForm() {
         };
         const res = await axiosSecure.post("/payments", payment);
         console.log("payment saved", res.data);
+        cartsRefetch();
+        if (res.data.paymentResult.insertedId) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Payment  has been Done",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        }
       }
     }
   };
