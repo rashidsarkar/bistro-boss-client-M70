@@ -53,6 +53,11 @@ function DashBord() {
                   <TbUsers /> All Users
                 </NavLink>
               </li>
+              <li>
+                <NavLink to={"/dashBord/paymentHistory"}>
+                  <TiCalendar /> Payment History
+                </NavLink>
+              </li>
             </>
           ) : (
             <>
@@ -62,8 +67,8 @@ function DashBord() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to={"/dashBord/reservation"}>
-                  <TiCalendar /> Reservation
+                <NavLink to={"/dashBord/paymentHistory"}>
+                  <TiCalendar /> Payment History
                 </NavLink>
               </li>
               <li>
